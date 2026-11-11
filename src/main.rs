@@ -6,19 +6,20 @@ mod vetor;
 fn main() {
     let width = 640.0;
     let height = 480.0;
+    let safe_zone = 0.8;
     let max_y = 3;
     let max_x = 5;
     let tam_unit = 100;
     let y_lines: [[(f32, f32); 2]; 5] = array::from_fn(|i| {
         [
-            (height - (i * 100) as f32, height),
-            (height - (i * 100) as f32, 0.0),
+            ((i * tam_unit) as f32 + 10.0, height),
+            ((i * tam_unit) as f32 + 10.0, 0.0),
         ]
     }); // Os eixos por enquanto serão linhas normais, mas devo mudar isso depois
     let x_lines: [[(f32, f32); 2]; 3] = array::from_fn(|i| {
         [
-            (0.0 as f32, width - (i * 100) as f32),
-            (width as f32, width - (i * 100) as f32),
+            (0.0 as f32, height - 10.0 - (i * tam_unit) as f32),
+            (width as f32, height - 10.0 - (i * tam_unit) as f32),
         ]
     }); // Os eixos por enquanto serão linhas normais, mas devo mudar isso depois
 
