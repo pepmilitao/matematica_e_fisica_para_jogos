@@ -48,5 +48,8 @@ fn main() {
             3.0,
             Color::BLACK,
         );
+
+        // Pontos
+        let a = Ponto::new(3.0, 2.0);
     }
 }
