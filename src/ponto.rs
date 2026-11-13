@@ -1,39 +1,58 @@
-use std::ops::Sub;
+use crate::vetor::Vetor;
+use std::ops::{Add, Sub};
 
+#[derive(Copy, Clone)]
 pub struct Ponto {
-    a: f32,
-    b: f32,
+    x: f32,
+    y: f32,
 }
 
 impl Ponto {
-    pub fn new(a: f32, b: f32) -> Self {
-        Self { a, b }
+    pub fn new(x: f32, y: f32) -> Self {
+        Self { x, y }
     }
 
-    pub fn set_a(&mut self, a: f32) {
-        self.a = a
+    pub fn set_x(&mut self, x: f32) {
+        self.x = x
     }
 
-    pub fn set_b(&mut self, b: f32) {
-        self.b = b
+    pub fn set_y(&mut self, y: f32) {
+        self.y = y
     }
 
-    pub fn get_a(&self) -> f32 {
-        self.a
+    pub fn get_x(&self) -> f32 {
+        self.x
     }
 
-    pub fn get_b(&self) -> f32 {
-        self.b
+    pub fn get_y(&self) -> f32 {
+        self.y
+    }
+
+    pub fn get_point(&self) -> (f32, f32) {
+        (self.x, self.y)
     }
 }
 
-impl Sub for Ponto {
+impl Sub<Ponto> for Ponto {
     type Output = Vetor;
 
     fn sub(self, other: Self) -> Self::Output {
-        Self::Output {
-            a: self.a - other.a,
-            b: self.b - other.b,
-        }
+        Self::Output::new(self.get_x() - other.get_x(), self.get_y() - other.get_y())
+    }
+}
+
+impl Sub<Vetor> for Ponto {
+    type Output = Ponto;
+
+    fn sub(self, other: Vetor) -> Self::Output {
+        Self::Output::new(self.get_x() - other.get_x(), self.get_y() - other.get_y())
+    }
+}
+
+impl Add<Vetor> for Ponto {
+    type Output = Ponto;
+
+    fn add(self, other: Vetor) -> Self::Output {
+        Self::Output::new(self.get_x() + other.get_x(), self.get_y() + other.get_y())
     }
 }
