@@ -1,13 +1,20 @@
 use matematica_e_fisica_para_jogos::{ponto::Ponto, vetor::Vetor};
 use raylib::prelude::*;
 
+use crate::PosTexto::{Final, Meio};
+
+enum PosTexto {
+    Meio,
+    Final,
+}
+
 fn draw_arrow(
     draw_handle: &mut RaylibDrawHandle,
     ponto_inicial: Ponto,
     direcao: Vetor,
     expessura: f32,
     cor: Color,
-    nome: Option<String>,
+    nome: Option<(String, PosTexto)>,
     numeros: Option<i32>,
 ) {
     let ponto_final = ponto_inicial + direcao;
@@ -29,26 +36,30 @@ fn draw_arrow(
 
     draw_handle.draw_triangle(
         (
-            ponto_final_x - 15.0 * direcao_norm_x + 6.0 * perpendicular_x,
-            ponto_final_y - 15.0 * direcao_norm_y + 6.0 * perpendicular_y,
+            ponto_final_x - 10.0 * direcao_norm_x + 4.0 * perpendicular_x,
+            ponto_final_y - 10.0 * direcao_norm_y + 4.0 * perpendicular_y,
         ),
         ponto_final.get_point(),
         (
-            ponto_final_x - 15.0 * direcao_norm_x - 6.0 * perpendicular_x,
-            ponto_final_y - 15.0 * direcao_norm_y - 6.0 * perpendicular_y,
+            ponto_final_x - 10.0 * direcao_norm_x - 4.0 * perpendicular_x,
+            ponto_final_y - 10.0 * direcao_norm_y - 4.0 * perpendicular_y,
         ),
         cor,
     );
 
     match nome {
         Some(v) => {
-            let ponto_texto = ponto_inicial + direcao / 2.0 + perpendicular * 4.0;
+            let ponto_texto;
+            match v.1 {
+                Meio => ponto_texto = ponto_inicial + direcao / 2.0 + perpendicular * 4.0,
+                Final => ponto_texto = ponto_final + perpendicular * 4.0,
+            }
             draw_handle.draw_text(
-                v.as_str(),
+                v.0.as_str(),
                 ponto_texto.get_x() as i32,
                 ponto_texto.get_y() as i32,
                 20,
-                cor,
+                Color::BLACK,
             );
         }
         None => {}
@@ -108,7 +119,7 @@ fn main() {
             Vetor::new(500.0, 0.0),
             1.0,
             Color::BLACK,
-            None,
+            Some(("x".to_string(), PosTexto::Final)),
             Some(grid_spacing),
         );
 
@@ -122,7 +133,7 @@ fn main() {
             Vetor::new(0.0, -400.0),
             1.0,
             Color::BLACK,
-            None,
+            Some(("y".to_string(), PosTexto::Final)),
             Some(grid_spacing),
         );
 
@@ -144,7 +155,7 @@ fn main() {
             v * grid_spacing as f32,
             3.0,
             Color::PURPLE,
-            Some(String::from("v")),
+            Some((String::from("v"), PosTexto::Meio)),
             None,
         );
 
@@ -156,11 +167,27 @@ fn main() {
             Color::BLUE,
         );
 
+        d.draw_text(
+            "A",
+            a.get_x() as i32 * grid_spacing + grid_spacing + 5,
+            height - a.get_y() as i32 * grid_spacing - grid_spacing + 5,
+            20,
+            Color::BLACK,
+        );
+
         d.draw_circle(
             b.get_x() as i32 * grid_spacing + grid_spacing,
             height - b.get_y() as i32 * grid_spacing - grid_spacing,
             5.0,
             Color::BLUE,
+        );
+
+        d.draw_text(
+            "B",
+            b.get_x() as i32 * grid_spacing + grid_spacing + 5,
+            height - b.get_y() as i32 * grid_spacing - grid_spacing + 5,
+            20,
+            Color::BLACK,
         );
     }
 }
