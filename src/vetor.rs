@@ -1,6 +1,4 @@
-use std::ops::{Div, Mul, Neg, Sub};
-
-use raylib::ffi::sqrtf;
+use std::ops::{Add, Div, Mul, Neg};
 
 #[derive(Copy, Clone)]
 pub struct Vetor {
@@ -37,13 +35,21 @@ impl Vetor {
         (self.x * self.x + self.y * self.y).sqrt()
     }
 
-    pub fn norm(&self) -> Self {
+    pub fn normalize(&self) -> Self {
         let mag = self.mag();
         Self::new(self.x / mag, self.y / mag)
     }
 
     pub fn get_perpendicular(&self) -> Self {
         Self::new(-self.y, self.x)
+    }
+}
+
+impl Add<Vetor> for Vetor {
+    type Output = Vetor;
+
+    fn add(self, rhs: Vetor) -> Self::Output {
+        Self::Output::new(self.get_x() + rhs.get_x(), self.get_y() + rhs.get_y())
     }
 }
 
@@ -63,11 +69,11 @@ impl Mul<f32> for Vetor {
     }
 }
 
-impl Div for Vetor {
+impl Div<f32> for Vetor {
     type Output = Vetor;
 
-    fn div(self, rhs: Self) -> Self::Output {
-        Self::Output::new(self.get_x() / rhs.get_x(), self.get_y() / rhs.get_y())
+    fn div(self, rhs: f32) -> Self::Output {
+        Self::Output::new(self.get_x() / rhs, self.get_y() / rhs)
     }
 }
 

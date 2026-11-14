@@ -7,6 +7,8 @@ fn draw_arrow(
     direcao: Vetor,
     expessura: f32,
     cor: Color,
+    nome: Option<String>,
+    numeros: Option<i32>,
 ) {
     let ponto_final = ponto_inicial + direcao;
     draw_handle.draw_line_ex(
@@ -15,7 +17,7 @@ fn draw_arrow(
         expessura,
         cor,
     );
-    let direcao_norm = direcao.norm();
+    let direcao_norm = direcao.normalize();
     let perpendicular = direcao_norm.get_perpendicular();
 
     let ponto_final_x = ponto_final.get_x();
@@ -27,22 +29,54 @@ fn draw_arrow(
 
     draw_handle.draw_triangle(
         (
-            ponto_final_x - 10.0 * direcao_norm_x + 4.0 * perpendicular_x,
-            ponto_final_y - 10.0 * direcao_norm_y + 4.0 * perpendicular_y,
+            ponto_final_x - 15.0 * direcao_norm_x + 6.0 * perpendicular_x,
+            ponto_final_y - 15.0 * direcao_norm_y + 6.0 * perpendicular_y,
         ),
         ponto_final.get_point(),
         (
-            ponto_final_x - 10.0 * direcao_norm_x - 4.0 * perpendicular_x,
-            ponto_final_y - 10.0 * direcao_norm_y - 4.0 * perpendicular_y,
+            ponto_final_x - 15.0 * direcao_norm_x - 6.0 * perpendicular_x,
+            ponto_final_y - 15.0 * direcao_norm_y - 6.0 * perpendicular_y,
         ),
         cor,
     );
+
+    match nome {
+        Some(v) => {
+            let ponto_texto = ponto_inicial + direcao / 2.0 + perpendicular * 4.0;
+            draw_handle.draw_text(
+                v.as_str(),
+                ponto_texto.get_x() as i32,
+                ponto_texto.get_y() as i32,
+                20,
+                cor,
+            );
+        }
+        None => {}
+    }
+
+    match numeros {
+        Some(grid_spacing) => {
+            let n = (direcao.mag() / grid_spacing as f32).ceil() as i32;
+            for i in 1..n {
+                let ponto_numero =
+                    ponto_inicial + direcao_norm * (grid_spacing * i) as f32 + perpendicular * 4.0;
+                draw_handle.draw_text(
+                    &i.to_string(),
+                    ponto_numero.get_x() as i32,
+                    ponto_numero.get_y() as i32,
+                    20,
+                    cor,
+                );
+            }
+        }
+        None => {}
+    }
 }
 
 fn main() {
-    let width = 640;
-    let height = 480;
-    let grid_spacing = 90;
+    let width = 760;
+    let height = (width as f32 / 1.3333333) as i32;
+    let grid_spacing = 100;
     let (mut rl, thread) = raylib::init().size(width, height).title("A0").build();
 
     while !rl.window_should_close() {
@@ -70,13 +104,12 @@ fn main() {
         // Eixo x
         draw_arrow(
             &mut d,
-            Ponto::new(
-                0.5 * grid_spacing as f32,
-                (height - 1 * grid_spacing) as f32,
-            ),
+            Ponto::new(grid_spacing as f32, (height - 1 * grid_spacing) as f32),
             Vetor::new(500.0, 0.0),
             1.0,
             Color::BLACK,
+            None,
+            Some(grid_spacing),
         );
 
         // Eixo y
@@ -84,11 +117,13 @@ fn main() {
             &mut d,
             Ponto::new(
                 (1 * grid_spacing) as f32,
-                height as f32 - 0.5 * grid_spacing as f32,
+                height as f32 - grid_spacing as f32,
             ),
             Vetor::new(0.0, -400.0),
             1.0,
             Color::BLACK,
+            None,
+            Some(grid_spacing),
         );
 
         // Pontos
@@ -109,6 +144,8 @@ fn main() {
             v * grid_spacing as f32,
             3.0,
             Color::PURPLE,
+            Some(String::from("v")),
+            None,
         );
 
         // Desenhar pontos
