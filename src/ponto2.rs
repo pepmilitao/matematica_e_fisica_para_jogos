@@ -1,13 +1,13 @@
-use crate::vetor::Vetor;
+use crate::vetor2::Vetor2;
 use std::ops::{Add, Sub};
 
 #[derive(Copy, Clone)]
-pub struct Ponto {
+pub struct Ponto2 {
     x: f32,
     y: f32,
 }
 
-impl Ponto {
+impl Ponto2 {
     pub fn new(x: f32, y: f32) -> Self {
         Self { x, y }
     }
@@ -33,26 +33,26 @@ impl Ponto {
     }
 }
 
-impl Sub<Ponto> for Ponto {
-    type Output = Vetor;
+impl Sub<Self> for Ponto2 {
+    type Output = Vetor2;
 
     fn sub(self, other: Self) -> Self::Output {
         Self::Output::new(self.get_x() - other.get_x(), self.get_y() - other.get_y())
     }
 }
 
-impl Sub<Vetor> for Ponto {
-    type Output = Ponto;
+impl Sub<Vetor2> for Ponto2 {
+    type Output = Self;
 
-    fn sub(self, other: Vetor) -> Self::Output {
+    fn sub(self, other: Vetor2) -> Self::Output {
         Self::Output::new(self.get_x() - other.get_x(), self.get_y() - other.get_y())
     }
 }
 
-impl Add<Vetor> for Ponto {
-    type Output = Ponto;
+impl Add<Vetor2> for Ponto2 {
+    type Output = Self;
 
-    fn add(self, other: Vetor) -> Self::Output {
+    fn add(self, other: Vetor2) -> Self::Output {
         Self::Output::new(self.get_x() + other.get_x(), self.get_y() + other.get_y())
     }
 }

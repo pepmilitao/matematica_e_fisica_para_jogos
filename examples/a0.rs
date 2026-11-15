@@ -1,4 +1,4 @@
-use matematica_e_fisica_para_jogos::{ponto::Ponto, vetor::Vetor};
+use matematica_e_fisica_para_jogos::{ponto2::Ponto2, vetor2::Vetor2};
 use raylib::prelude::*;
 
 use crate::PosTexto::{Final, Meio};
@@ -10,8 +10,8 @@ enum PosTexto {
 
 fn draw_arrow(
     draw_handle: &mut RaylibDrawHandle,
-    ponto_inicial: Ponto,
-    direcao: Vetor,
+    ponto_inicial: Ponto2,
+    direcao: Vetor2,
     expessura: f32,
     cor: Color,
     nome: Option<(String, PosTexto)>,
@@ -115,8 +115,8 @@ fn main() {
         // Eixo x
         draw_arrow(
             &mut d,
-            Ponto::new(grid_spacing as f32, (height - 1 * grid_spacing) as f32),
-            Vetor::new(500.0, 0.0),
+            Ponto2::new(grid_spacing as f32, (height - 1 * grid_spacing) as f32),
+            Vetor2::new(500.0, 0.0),
             1.0,
             Color::BLACK,
             Some(("x".to_string(), PosTexto::Final)),
@@ -126,11 +126,11 @@ fn main() {
         // Eixo y
         draw_arrow(
             &mut d,
-            Ponto::new(
+            Ponto2::new(
                 (1 * grid_spacing) as f32,
                 height as f32 - grid_spacing as f32,
             ),
-            Vetor::new(0.0, -400.0),
+            Vetor2::new(0.0, -400.0),
             1.0,
             Color::BLACK,
             Some(("y".to_string(), PosTexto::Final)),
@@ -138,8 +138,8 @@ fn main() {
         );
 
         // Pontos
-        let a = Ponto::new(1.0, 3.0);
-        let b = Ponto::new(4.0, 1.0);
+        let a = Ponto2::new(1.0, 3.0);
+        let b = Ponto2::new(4.0, 1.0);
 
         // Vetor
         let mut v = b - a;
@@ -148,7 +148,7 @@ fn main() {
         // Desenhar vetor
         draw_arrow(
             &mut d,
-            Ponto::new(
+            Ponto2::new(
                 (a.get_x() as i32 * grid_spacing + grid_spacing) as f32,
                 (height - a.get_y() as i32 * grid_spacing - grid_spacing) as f32,
             ),
