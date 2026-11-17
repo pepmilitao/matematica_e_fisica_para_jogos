@@ -50,6 +50,7 @@ fn main() {
     let i = c.is_subset(a.clone());
     println!("Conjunto b é subconjunto de conjunto a: {}", h);
     println!("Conjunto c é subconjunto de conjunto a: {}", i);
+    println!();
 
     println!("Item i: gerar todos os subconjuntos próprios");
     let j = a.proper_subsets();

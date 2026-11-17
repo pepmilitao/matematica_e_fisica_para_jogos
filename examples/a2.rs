@@ -1,7 +1,6 @@
 use matematica_e_fisica_para_jogos::{
     draw::{PosTexto, draw_arrow},
     ponto2::Ponto2,
-    vetor2::Vetor2,
 };
 use rand::seq::SliceRandom;
 use raylib::prelude::*;
