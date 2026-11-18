@@ -40,6 +40,10 @@ impl Vetor3 {
         (self.x, self.y, self.z)
     }
 
+    pub fn print(&self) {
+        println!("{{ x: {}, y: {}, z: {} }}", self.x, self.y, self.z);
+    }
+
     pub fn mag(&self) -> f32 {
         (self.x * self.x + self.y * self.y + self.z * self.z).sqrt()
     }
@@ -50,7 +54,7 @@ impl Vetor3 {
     }
 
     pub fn dot(&self, b: Self) -> f32 {
-        self.x * b.get_x() + self.y + b.get_y() + self.z + b.get_z()
+        self.x * b.get_x() + self.y * b.get_y() + self.z * b.get_z()
     }
 
     pub fn cross(&self, v: Self) -> Self {

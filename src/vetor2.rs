@@ -27,6 +27,10 @@ impl Vetor2 {
         self.y
     }
 
+    pub fn print(&self) {
+        println!("{{ x: {}, y: {} }}", self.x, self.y);
+    }
+
     pub fn get_point(&self) -> (f32, f32) {
         (self.x, self.y)
     }
@@ -41,7 +45,7 @@ impl Vetor2 {
     }
 
     pub fn dot(&self, b: Self) -> f32 {
-        self.x * b.get_x() + self.y + b.get_y()
+        self.x * b.get_x() + self.y * b.get_y()
     }
 
     pub fn cross(&self, v: Self) -> f32 {
