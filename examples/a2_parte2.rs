@@ -1,11 +1,16 @@
 use matematica_e_fisica_para_jogos::{
     draw::{PosTexto, draw_arrow},
     ponto2::Ponto2,
+    vetor2::Vetor2,
 };
 use rand::seq::SliceRandom;
 use raylib::prelude::*;
+use rayon::iter::{IndexedParallelIterator, IntoParallelRefIterator, ParallelIterator};
+use std::env;
 
 fn main() {
+    let args: Vec<String> = env::args().collect();
+    let n = args[1].parse::<usize>().unwrap() + 1;
     let width = 760;
     let height = (width as f32 / 1.3333333) as i32;
     let (mut rl, thread) = raylib::init().size(width, height).title("A2").build();
@@ -15,61 +20,35 @@ fn main() {
     let r = || rand::random_range(150..500) as f32;
 
     // Definição dos pontos aleatórios
-    let ponto_inicial = Ponto2::new(r(), r());
-    let ponto_inicial_v = Ponto2::new(r(), r());
-    let ponto_inicial_w = Ponto2::new(r(), r());
-    let ponto_final_w = Ponto2::new(r(), r());
+    let mut pontos = Vec::<Ponto2>::new();
+    for i in 0..n {
+        pontos.push(Ponto2::new(r(), r()))
+    }
 
-    // Vetores
-    let u = ponto_inicial_v - ponto_inicial;
-    let v = ponto_inicial_w - ponto_inicial_v;
-    let w = ponto_final_w - ponto_inicial_w;
-    let mut vetores = vec![
-        (u, "u", Color::BLUE),
-        (v, "v", Color::GREEN),
-        (w, "w", Color::PURPLE),
-    ];
-    let soma = u + v + w;
+    // Definição dos vetores
+    let mut vetores = Vec::<Vetor2>::new();
+    for i in 1..n {
+        vetores.push(pontos[i] - pontos[i - 1])
+    }
+    vetores.push(Vetor2::new(0.0, 0.0));
+
+    // Vetor soma
+    let soma = vetores
+        .iter()
+        .fold(Vetor2::new(0.0, 0.0), |acc, i| acc + *i);
+    let ponto_inicial = pontos[0];
 
     while !rl.window_should_close() {
         vetores.shuffle(&mut rand::rng());
         let mut d = rl.begin_drawing(&thread);
+        let mut ponto_atual = ponto_inicial;
 
         d.clear_background(Color::WHITE);
 
-        draw_arrow(
-            &mut d,
-            ponto_inicial,
-            vetores[0].0,
-            1.0,
-            vetores[0].2,
-            Some((vetores[0].1.to_string(), PosTexto::Meio)),
-            None,
-        );
-
-        let ponto_inicial1 = ponto_inicial + vetores[0].0;
-
-        draw_arrow(
-            &mut d,
-            ponto_inicial1,
-            vetores[1].0,
-            1.0,
-            vetores[1].2,
-            Some((vetores[1].1.to_string(), PosTexto::Meio)),
-            None,
-        );
-
-        let ponto_inicial2 = ponto_inicial1 + vetores[1].0;
-
-        draw_arrow(
-            &mut d,
-            ponto_inicial2,
-            vetores[2].0,
-            1.0,
-            vetores[2].2,
-            Some((vetores[2].1.to_string(), PosTexto::Meio)),
-            None,
-        );
+        for i in &vetores {
+            draw_arrow(&mut d, ponto_atual, *i, 1.0, Color::BLACK, None, None);
+            ponto_atual = ponto_atual + *i;
+        }
 
         draw_arrow(
             &mut d,
